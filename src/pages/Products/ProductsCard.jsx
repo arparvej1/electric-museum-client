@@ -3,7 +3,7 @@ import ReactStars from "react-rating-stars-component";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const ProductsCard = ({ product }) => {
+const ProductsCard = ({ product, isAdmin }) => {
   const {
     _id,
     ProductName,
@@ -35,7 +35,7 @@ const ProductsCard = ({ product }) => {
   };
 
   useEffect(() => {
-    loadReview();
+    // loadReview();
   }, []);
   // ----------- rating end -------------
 
@@ -92,17 +92,22 @@ const ProductsCard = ({ product }) => {
           <p><span className='font-semibold'>Price:</span> {Price}</p>
           <p><span className='font-semibold'>Description:</span> {Description}</p>
 
-          {/* <div style={containerStyle}>
-            <button
-              style={buttonStyle}
-              onClick={() => copyToClipboard(ProductName + ", " + BrandName)}
-            >
-              {ProductName}, {BrandName}
-            </button>
-            <div style={copyMessageStyle}>
-              {copyMessage}
-            </div>
-          </div> */}
+          <div>
+            {
+              isAdmin &&
+              <div style={containerStyle}>
+                <button
+                  style={buttonStyle}
+                  onClick={() => copyToClipboard(ProductName + ", " + BrandName)}
+                >
+                  {ProductName}, {BrandName}
+                </button>
+                <div style={copyMessageStyle}>
+                  {copyMessage}
+                </div>
+              </div>
+            }
+          </div>
 
           {/* -- TODO: Update rating -- */}
           {rating ?
@@ -125,7 +130,8 @@ const ProductsCard = ({ product }) => {
 };
 
 ProductsCard.propTypes = {
-  product: PropTypes.object
+  product: PropTypes.object,
+  isAdmin: PropTypes.bool
 };
 
 export default ProductsCard;

@@ -11,9 +11,11 @@ import 'swiper/css/pagination';
 // import required modules
 import axios from "axios";
 import ProductsCard from "../Products/ProductsCard";
+import useAuth from "../../hooks/useAuth";
 // --------------- Swiper End ------------------------
 
 const Home = () => {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
 
@@ -36,6 +38,21 @@ const Home = () => {
     }
     console.log('products', products);
   }, [products]);
+
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    async function fetchUserRole() {
+      if (user) {
+        const response = await axios.get(`${import.meta.env.VITE_VERCEL_API}/checkAdmin/${user.email}`);
+        setIsAdmin(response.data.admin);
+        // console.log(response.data);
+      } else {
+        setIsAdmin(false);
+      }
+    }
+    fetchUserRole();
+  }, [user]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -100,7 +117,7 @@ const Home = () => {
         <title> Electric Museum </title>
       </Helmet>
       {/* ---------- slider banner start ------------ */}
-
+      
       {/* ---------- slider banner End ------------ */}
       {/* ------------ products card start ------------- */}
       <div className="my-5 md:my-10 lg:my-24">
@@ -109,12 +126,14 @@ const Home = () => {
       </div>
 
       <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-          {
-            products.map(product => <ProductsCard
-              key={product._id} product={product}
-            ></ProductsCard>)
-          }
-        </div>
+        {
+          products.map(product => <ProductsCard
+            key={product._id}
+            product={product}
+            isAdmin={isAdmin}
+          ></ProductsCard>)
+        }
+      </div>
       {/* ------------- products card end -------------- */}
       {/* ---------- review section start --------- */}
       <div>
