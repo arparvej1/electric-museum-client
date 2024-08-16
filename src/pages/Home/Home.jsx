@@ -52,7 +52,6 @@ const Home = () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_VERCEL_API}/productsCount?filterText=${filterText}&brand=${selectedBrand}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}`);
       // handle success
-      console.log(response.data.count)
       setCount(response.data.count)
     } catch (error) {
       // handle error
@@ -70,24 +69,12 @@ const Home = () => {
       // handle error
       console.log(error);
     }
-
-    // await axios.get(`${import.meta.env.VITE_VERCEL_API}/productsLimit?page=${currentPage}&size=${itemsPerPage}&filterText=${filterText}&sortBy=${sortBy}&sortOrder=${sortOrder}&brand=${selectedBrand}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}`)
-    //   .then(function (response) {
-    //     // handle success
-    //     console.log('response', response.data)
-    //     setProducts(response.data);
-    //     setLoading(false);
-    //   })
-    //   .catch(function (error) {
-    //     // handle error
-    //     console.log(error);
-    //   })
   };
 
   useEffect(() => {
     callProductsCount();
     callLoadProducts();
-  }, [currentPage, itemsPerPage, filterText, sortBy, sortOrder, selectedBrand, selectedCategory]);
+  }, [currentPage, itemsPerPage, filterText, sortBy, sortOrder, selectedBrand, selectedCategory, minPrice, maxPrice]);
 
   const handleItemsPerPage = e => {
     const val = parseInt(e.target.value);
@@ -219,8 +206,8 @@ const Home = () => {
         ]);
         setBrands(brandsResponse.data);
         setCategories(categoriesResponse.data);
-        console.log(brands);
-        console.log(categories);
+        // console.log(brands);
+        // console.log(categories);
       } catch (error) {
         console.error('Error fetching brands or categories:', error);
       }
@@ -236,7 +223,25 @@ const Home = () => {
     setSelectedCategory(e.target.value);
   };
 
-  const handleFilter = () => {
+  const handleFilter = (e) => {
+    e.preventDefault();
+    const min = parseFloat(minPrice);
+    const max = parseFloat(maxPrice);
+
+    if (isNaN(min)) {
+      setMinPrice('');
+    } else {
+      setMinPrice(min);
+    }
+
+    if (isNaN(max)) {
+      setMaxPrice('');
+    } else {
+      setMaxPrice(max);
+    }
+
+    console.log(min, max, 'min, max');
+
     setCurrentPage(0);
   };
 
@@ -290,6 +295,7 @@ const Home = () => {
           <select
             className="select select-bordered"
             onChange={handleSortChange}>
+            <option selected disabled value="">Default</option>
             <option value="priceLowToHigh">Price: Low to High</option>
             <option value="priceHighToLow">Price: High to Low</option>
             <option value="newest">Date Added: Newest first</option>
@@ -328,24 +334,20 @@ const Home = () => {
           </select>
         </div>
 
-        <div className="border-2 rounded-lg p-2">
-
-          {/* ----- Filter start ----- */}
-          <form onSubmit={e => { e.preventDefault(); handleFilter(); }} className="flex gap-3">
-            {/* <div className="form-control mb-4">
-              <label className="label">
-                <span className="label-text">Price Range</span>
-              </label>
-              <div className="flex gap-2">
-                <input type="number" placeholder="Min" className="input input-bordered" value={minPrice} onChange={e => setMinPrice(e.target.value)} />
-                <input type="number" placeholder="Max" className="input input-bordered" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} />
-              </div>
-            </div> */}
-            {/* <button type="submit" className='btn'>Apply Filters</button> */}
-          </form>
-          {/* ----- Filter end ----- */}
-        </div>
         {/* -------- Categorization filter end ------ */}
+      </div>
+      <hr className="my-5" />
+      <div className="flex justify-center">
+        {/* ----- Filter start ----- */}
+        <form onSubmit={handleFilter} className="flex flex-col md:flex-row gap-3 justify-center items-center">
+          <label className="font-bold">Price Range: </label>
+          <div className="flex flex-col md:flex-row gap-2">
+            <input type="number" placeholder="Min" className="input input-bordered" value={minPrice} onChange={e => setMinPrice(e.target.value)} />
+            <input type="number" placeholder="Max" className="input input-bordered" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} />
+          </div>
+          <button type="submit" className='btn'>Apply Filters</button>
+        </form>
+        {/* ----- Filter end ----- */}
       </div>
 
       <hr className="my-5" />
