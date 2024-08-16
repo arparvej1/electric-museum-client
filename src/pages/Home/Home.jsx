@@ -181,7 +181,16 @@ const Home = () => {
         console.log(error);
       });
     // --------- send server end -----
-  }
+  };
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    setCurrentPage(0);
+    const form = e.target;
+    const searchText = form.searchField.value;
+    console.log(searchText);
+    setFilterText(searchText);
+  };
 
   return (
     <div>
@@ -192,22 +201,39 @@ const Home = () => {
 
       {/* ---------- slider banner End ------------ */}
 
-      <div className="my-5 md:my-10 lg:my-24">
+      <div className="my-5">
         < h3 className="font-semibold md:mt-10 text-xl md:text-2xl lg:text-3xl text-base-content mx-auto text-center">Lorem ipsum dolor sit amet consectetur adipisicing.</h3>
         <p className="my-5 md:my-8 text-center md:w-2/3 mx-auto">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex dignissimos, deserunt, sequi doloribus nam ratione odio debitis consequuntur reprehenderit tempora enim aut hic praesentium qui quis distinctio fugiat eos ad!</p>
       </div>
-      {/* --------- Display Layout Start ------- */}
-      {products.length > 0 ?
-        <div className="flex justify-end items-center gap-2 my-5">
-          <p className="font-semibold md:text-xl">Display Layout</p>
-          <div>
-            <span onClick={() => handleDisplayLayoutBtn('list')}
-              className={`btn rounded-l-2xl rounded-r-none text-xl md:text-2xl ${displayLayout === 'list' ? 'bg-accent bg-opacity-50' : ''}`}><FaList /></span>
-            <span onClick={() => handleDisplayLayoutBtn('grid')}
-              className={`btn rounded-l-none rounded-r-2xl text-xl md:text-2xl ${displayLayout === 'grid' ? 'bg-accent bg-opacity-50' : ''}`}><IoGrid /></span>
-          </div>
-        </div> : <></>}
-      {/* --------- Display Layout End ------- */}
+      <div className="flex justify-center md:gap-10 flex-col-reverse md:flex-row">
+        {/* ----- Search start ----- */}
+        <div className='my-6 text-center'>
+          <form onSubmit={handleSearch}>
+            <div className="flex flex-col md:flex-row justify-center gap-2">
+              <label className="input input-bordered flex items-center gap-2">
+                <input type="text" name="searchField" className="grow" placeholder="Search" />
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="w-4 h-4 opacity-70"><path fillRule="evenodd" d="M9.965 11.026a5 5 0 1 1 1.06-1.06l2.755 2.754a.75.75 0 1 1-1.06 1.06l-2.755-2.754ZM10.5 7a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0Z" clipRule="evenodd" /></svg>
+              </label>
+              <label className="flex flex-col gap-1">
+                <input type="submit" value="Search" className="btn bg-primary text-primary-content" />
+              </label>
+            </div>
+          </form>
+        </div>
+        {/* ----- Search end ----- */}
+        {/* --------- Display Layout Start ------- */}
+        {products.length > 0 ?
+          <div className="flex justify-end items-center gap-2 my-5">
+            <p className="font-semibold md:text-xl">Display Layout</p>
+            <div>
+              <span onClick={() => handleDisplayLayoutBtn('list')}
+                className={`btn rounded-l-2xl rounded-r-none text-xl md:text-2xl ${displayLayout === 'list' ? 'bg-accent bg-opacity-50' : ''}`}><FaList /></span>
+              <span onClick={() => handleDisplayLayoutBtn('grid')}
+                className={`btn rounded-l-none rounded-r-2xl text-xl md:text-2xl ${displayLayout === 'grid' ? 'bg-accent bg-opacity-50' : ''}`}><IoGrid /></span>
+            </div>
+          </div> : <></>}
+        {/* --------- Display Layout End ------- */}
+      </div>
 
       {/* ------------ products card start ------------- */}
       {/* --------------------- display view ------------------------- */}
@@ -277,7 +303,6 @@ const Home = () => {
               <button className="btn" onClick={handlePrevPage}>Prev</button>
               {
                 pages.map(page => <button
-                  // className={currentPage === page ? 'selected' : undefined}
                   className={`btn ${currentPage === page ? 'bg-accent text-accent-content' : undefined}`}
                   onClick={() => setCurrentPage(page)}
                   key={page}
