@@ -75,7 +75,8 @@ const ProductUpdate = ({ product }) => {
     axios.put(`${import.meta.env.VITE_VERCEL_API}/newPicture/${_id}`, uploadPicture)
       .then(function (response) {
         console.log(response.data);
-        if (response.modifiedCount) {
+        if (response.data.modifiedCount) {
+          setNewPic(productPicture);
           toast.success("Upload Successfully.");
         }
       })
@@ -83,7 +84,6 @@ const ProductUpdate = ({ product }) => {
         console.log(error);
       });
     // --------- send server end -----
-
   };
 
   return (
@@ -120,7 +120,6 @@ const ProductUpdate = ({ product }) => {
     </div>
   );
 };
-
 
 ProductUpdate.propTypes = {
   product: PropTypes.object

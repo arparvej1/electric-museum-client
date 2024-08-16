@@ -4,26 +4,76 @@ import './home.css';
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
 import 'react-toastify/dist/ReactToastify.css';
-// --------------- Swiper Start ------------------------
-// Import Swiper styles
-import 'swiper/css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
 // import required modules
 import axios from "axios";
 import ProductsCard from "../Products/ProductsCard";
 import useAuth from "../../hooks/useAuth";
+import { FaList } from "react-icons/fa";
+import { IoGrid } from "react-icons/io5";
 // --------------- Swiper End ------------------------
 
 const Home = () => {
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState([]);
+  const [displayLayout, setDisplayLayout] = useState(localStorage.getItem('displayLayout') ? localStorage.getItem('displayLayout') : 'grid');
 
-  const callLoadProducts = async () => {
-    axios.get(`${import.meta.env.VITE_VERCEL_API}/products`)
+  const handleDisplayLayoutBtn = (layout) => {
+    if (layout === 'grid') {
+      setDisplayLayout('grid')
+    } else {
+      setDisplayLayout('list')
+    }
+  };
+
+
+  // const callLoadProducts2 = async () => {
+  //   axios.get(`${import.meta.env.VITE_VERCEL_API}/products`)
+  //     .then(function (response) {
+  //       // handle success
+  //       setProducts(response.data);
+  //       setLoading(false);
+  //     })
+  //     .catch(function (error) {
+  //       // handle error
+  //       console.log(error);
+  //     })
+  // };
+
+  // useEffect(() => {
+  //   if (products.length < 1) {
+  //     callLoadProducts2();
+  //   }
+  //   console.log('products', products);
+  // }, [products]);
+
+  // ----------------- pagination -----------------------
+  const [filterText, setFilterText] = useState('');
+  const [currentPage, setCurrentPage] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(9);
+  const [count, setCount] = useState(0);
+
+  const numberOfPages = Math.ceil(count / itemsPerPage);
+  const pages = [...Array(numberOfPages).keys()];
+
+  const callProductsCount = async () => {
+    await axios.get(`${import.meta.env.VITE_VERCEL_API}/productsCount?filterText=${filterText}`)
       .then(function (response) {
         // handle success
+        console.log(response.data.count)
+        setCount(response.data.count)
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+  };
+
+  const callLoadProducts = async () => {
+    await axios.get(`${import.meta.env.VITE_VERCEL_API}/productsLimit?page=${currentPage}&size=${itemsPerPage}&filterText=${filterText}&input=${''}`)
+      .then(function (response) {
+        // handle success
+        console.log('response', response.data)
         setProducts(response.data);
         setLoading(false);
       })
@@ -34,11 +84,30 @@ const Home = () => {
   };
 
   useEffect(() => {
-    if (products.length < 1) {
-      callLoadProducts();
+    callProductsCount();
+    callLoadProducts();
+  }, [currentPage, itemsPerPage, filterText]);
+
+  const handleItemsPerPage = e => {
+    const val = parseInt(e.target.value);
+    console.log(val);
+    setItemsPerPage(val);
+    setCurrentPage(0);
+  }
+
+  const handlePrevPage = () => {
+    if (currentPage > 0) {
+      setCurrentPage(currentPage - 1);
     }
-    console.log('products', products);
-  }, [products]);
+  }
+
+  const handleNextPage = () => {
+    if (currentPage < pages.length - 1) {
+      setCurrentPage(currentPage + 1);
+    }
+  }
+
+  // ------------------- pagination end ------------------
 
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -118,24 +187,74 @@ const Home = () => {
         <title> Electric Museum </title>
       </Helmet>
       {/* ---------- slider banner start ------------ */}
-      
+
       {/* ---------- slider banner End ------------ */}
-      {/* ------------ products card start ------------- */}
+
       <div className="my-5 md:my-10 lg:my-24">
         < h3 className="font-semibold md:mt-10 text-xl md:text-2xl lg:text-3xl text-base-content mx-auto text-center">Lorem ipsum dolor sit amet consectetur adipisicing.</h3>
         <p className="my-5 md:my-8 text-center md:w-2/3 mx-auto">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex dignissimos, deserunt, sequi doloribus nam ratione odio debitis consequuntur reprehenderit tempora enim aut hic praesentium qui quis distinctio fugiat eos ad!</p>
       </div>
+      {/* --------- Display Layout Start ------- */}
+      {products.length > 0 ?
+        <div className="flex justify-end items-center gap-2 my-5">
+          <p className="font-semibold md:text-xl">Display Layout</p>
+          <div>
+            <span onClick={() => handleDisplayLayoutBtn('list')}
+              className={`btn rounded-l-2xl rounded-r-none text-xl md:text-2xl ${displayLayout === 'list' ? 'bg-accent bg-opacity-50' : ''}`}><FaList /></span>
+            <span onClick={() => handleDisplayLayoutBtn('grid')}
+              className={`btn rounded-l-none rounded-r-2xl text-xl md:text-2xl ${displayLayout === 'grid' ? 'bg-accent bg-opacity-50' : ''}`}><IoGrid /></span>
+          </div>
+        </div> : <></>}
+      {/* --------- Display Layout End ------- */}
 
-      <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        {
-          products.map(product => <ProductsCard
-            key={product._id}
-            product={product}
-            isAdmin={isAdmin}
-          ></ProductsCard>)
-        }
-      </div>
+      {/* ------------ products card start ------------- */}
+      {/* --------------------- display view ------------------------- */}
+      {
+        displayLayout === 'list' ?
+          <div className="max-w-5xl mx-auto">
+            {/* products display list view */}
+            {products.length > 0 ?
+              <div className="overflow-x-auto">
+                <table className="table table-xs table-pin-rows table-pin-cols">
+                  <thead>
+                    <tr>
+                      <th></th>
+                      <td className="md:text-sm text-center">Image</td>
+                      <td className="md:text-sm text-center">Product Name</td>
+                      <td className="md:text-sm text-center">Product Category</td>
+                      <td className="md:text-sm text-center">Details</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      products.map((product, idx) => <tr key={product._id} className="md:text-sm">
+                        <th className="md:text-sm">{(currentPage * itemsPerPage) + idx + 1}</th>
+                        <td className="md:text-sm">
+                          <img className="w-10" src={product.ProductImage} alt="" />
+                        </td>
+                        <td className="md:text-sm">{product.ProductName}</td>
+                        <td className="md:text-sm">{product.Category}</td>
+                        {/* <td className="md:text-sm text-center"><Link to={`/product/${product._id}`} className="btn btn-link text-xl"><BiDetail title="View Details" /></Link></td> */}
+                      </tr>)
+                    }
+                  </tbody>
+                </table>
+              </div> : <></>}
+          </div>
+          :
+          <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {/* products display card view */}
+            {
+              products.map(product => <ProductsCard
+                key={product._id}
+                product={product}
+                isAdmin={isAdmin}
+              ></ProductsCard>)
+            }
+          </div>
+      }
       {/* ------------- products card end -------------- */}
+
       {/* ---------- review section start --------- */}
       <div>
 
