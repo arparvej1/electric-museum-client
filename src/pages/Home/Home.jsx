@@ -35,43 +35,59 @@ const Home = () => {
   const [itemsPerPage, setItemsPerPage] = useState(9);
   const [count, setCount] = useState(0);
 
-  const [sortBy, setSortBy] = useState('priceLowToHigh');
-  const [sortOrder, setSortOrder] = useState('asc'); // 'desc' for descending, 'asc' for ascending
-
   const numberOfPages = Math.ceil(count / itemsPerPage);
   const pages = [...Array(numberOfPages).keys()];
 
+  // ----- extra filter items
+  const [sortBy, setSortBy] = useState('priceLowToHigh');
+  const [sortOrder, setSortOrder] = useState('asc'); // 'desc' for descending, 'asc' for ascending
+  const [brands, setBrands] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [selectedBrand, setSelectedBrand] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+
   const callProductsCount = async () => {
-    await axios.get(`${import.meta.env.VITE_VERCEL_API}/productsCount?filterText=${filterText}`)
-      .then(function (response) {
-        // handle success
-        console.log(response.data.count)
-        setCount(response.data.count)
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_VERCEL_API}/productsCount?filterText=${filterText}&brand=${selectedBrand}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}`);
+      // handle success
+      console.log(response.data.count)
+      setCount(response.data.count)
+    } catch (error) {
+      // handle error
+      console.log(error);
+    }
   };
 
   const callLoadProducts = async () => {
-    await axios.get(`${import.meta.env.VITE_VERCEL_API}/productsLimit?page=${currentPage}&size=${itemsPerPage}&filterText=${filterText}&sortBy=${sortBy}&sortOrder=${sortOrder}`)
-      .then(function (response) {
-        // handle success
-        console.log('response', response.data)
-        setProducts(response.data);
-        setLoading(false);
-      })
-      .catch(function (error) {
-        // handle error
-        console.log(error);
-      })
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_VERCEL_API}/productsLimit?page=${currentPage}&size=${itemsPerPage}&filterText=${filterText}&sortBy=${sortBy}&sortOrder=${sortOrder}&brand=${selectedBrand}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}`);
+      // handle success
+      setProducts(response.data);
+      setLoading(false);
+    } catch (error) {
+      // handle error
+      console.log(error);
+    }
+
+    // await axios.get(`${import.meta.env.VITE_VERCEL_API}/productsLimit?page=${currentPage}&size=${itemsPerPage}&filterText=${filterText}&sortBy=${sortBy}&sortOrder=${sortOrder}&brand=${selectedBrand}&category=${selectedCategory}&minPrice=${minPrice}&maxPrice=${maxPrice}`)
+    //   .then(function (response) {
+    //     // handle success
+    //     console.log('response', response.data)
+    //     setProducts(response.data);
+    //     setLoading(false);
+    //   })
+    //   .catch(function (error) {
+    //     // handle error
+    //     console.log(error);
+    //   })
   };
 
   useEffect(() => {
     callProductsCount();
     callLoadProducts();
-  }, [currentPage, itemsPerPage, filterText, sortBy, sortOrder]);
+  }, [currentPage, itemsPerPage, filterText, sortBy, sortOrder, selectedBrand, selectedCategory]);
 
   const handleItemsPerPage = e => {
     const val = parseInt(e.target.value);
@@ -177,7 +193,7 @@ const Home = () => {
 
   const handleSortChange = (e) => {
     const value = e.target.value;
-
+    setCurrentPage(0);
     if (value === 'priceLowToHigh') {
       setSortBy('Price');
       setSortOrder('asc');
@@ -191,6 +207,37 @@ const Home = () => {
       setSortBy('ProductCreationDateAndTime');
       setSortOrder('asc');
     }
+  };
+
+
+  useEffect(() => {
+    async function fetchBrandsAndCategories() {
+      try {
+        const [brandsResponse, categoriesResponse] = await Promise.all([
+          axios.get(`${import.meta.env.VITE_VERCEL_API}/brands`),
+          axios.get(`${import.meta.env.VITE_VERCEL_API}/categories`)
+        ]);
+        setBrands(brandsResponse.data);
+        setCategories(categoriesResponse.data);
+        console.log(brands);
+        console.log(categories);
+      } catch (error) {
+        console.error('Error fetching brands or categories:', error);
+      }
+    }
+    fetchBrandsAndCategories();
+  }, []);
+
+  const handleBrandChange = (e) => {
+    setSelectedBrand(e.target.value);
+  };
+
+  const handleCategoryChange = (e) => {
+    setSelectedCategory(e.target.value);
+  };
+
+  const handleFilter = () => {
+    setCurrentPage(0);
   };
 
   return (
@@ -236,11 +283,13 @@ const Home = () => {
         {/* --------- Display Layout End ------- */}
       </div>
 
-      <div className="flex justify-center md:gap-10 flex-col-reverse md:flex-row">
+      <div className="flex justify-center items-center gap-3 md:gap-10 flex-col-reverse md:flex-row">
         {/* ------- Sort By Start --------- */}
-        <div className="border-2 rounded-lg p-2">
+        <div>
           <label className="font-bold">Sort By: </label>
-          <select onChange={handleSortChange}>
+          <select
+            className="select select-bordered"
+            onChange={handleSortChange}>
             <option value="priceLowToHigh">Price: Low to High</option>
             <option value="priceHighToLow">Price: High to Low</option>
             <option value="newest">Date Added: Newest first</option>
@@ -248,6 +297,55 @@ const Home = () => {
           </select>
         </div>
         {/* ------- Sort By end --------- */}
+        {/* -------- Categorization filter start ------ */}
+        <div>
+          {/* Brand Filter */}
+          <label className="font-bold">Brand: </label>
+          <select
+            className="select select-bordered"
+            onChange={handleBrandChange}
+            value={selectedBrand}
+          >
+            <option value="">All Brands</option>
+            {brands.map((brand) => (
+              <option key={brand} value={brand}>{brand}</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          {/* Category Filter */}
+          <label className="font-bold">Category: </label>
+          <select
+            className="select select-bordered"
+            onChange={handleCategoryChange}
+            value={selectedCategory}
+          >
+            <option value="">All Categories</option>
+            {categories.map((category) => (
+              <option key={category} value={category}>{category}</option>
+            ))}
+          </select>
+        </div>
+
+        <div className="border-2 rounded-lg p-2">
+
+          {/* ----- Filter start ----- */}
+          <form onSubmit={e => { e.preventDefault(); handleFilter(); }} className="flex gap-3">
+            {/* <div className="form-control mb-4">
+              <label className="label">
+                <span className="label-text">Price Range</span>
+              </label>
+              <div className="flex gap-2">
+                <input type="number" placeholder="Min" className="input input-bordered" value={minPrice} onChange={e => setMinPrice(e.target.value)} />
+                <input type="number" placeholder="Max" className="input input-bordered" value={maxPrice} onChange={e => setMaxPrice(e.target.value)} />
+              </div>
+            </div> */}
+            {/* <button type="submit" className='btn'>Apply Filters</button> */}
+          </form>
+          {/* ----- Filter end ----- */}
+        </div>
+        {/* -------- Categorization filter end ------ */}
       </div>
 
       <hr className="my-5" />
