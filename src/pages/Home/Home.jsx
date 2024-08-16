@@ -10,6 +10,8 @@ import ProductsCard from "../Products/ProductsCard";
 import useAuth from "../../hooks/useAuth";
 import { FaList } from "react-icons/fa";
 import { IoGrid } from "react-icons/io5";
+import { Link } from "react-router-dom";
+import { BiDetail } from "react-icons/bi";
 // --------------- Swiper End ------------------------
 
 const Home = () => {
@@ -221,7 +223,10 @@ const Home = () => {
                       <th></th>
                       <td className="md:text-sm text-center">Image</td>
                       <td className="md:text-sm text-center">Product Name</td>
-                      <td className="md:text-sm text-center">Product Category</td>
+                      <td className="md:text-sm text-center">Category</td>
+                      <td className="md:text-sm text-center">Brand Name</td>
+                      <td className="md:text-sm text-center">Price</td>
+                      <td className="md:text-sm text-center">Added</td>
                       <td className="md:text-sm text-center">Details</td>
                     </tr>
                   </thead>
@@ -234,7 +239,10 @@ const Home = () => {
                         </td>
                         <td className="md:text-sm">{product.ProductName}</td>
                         <td className="md:text-sm">{product.Category}</td>
-                        {/* <td className="md:text-sm text-center"><Link to={`/product/${product._id}`} className="btn btn-link text-xl"><BiDetail title="View Details" /></Link></td> */}
+                        <td className="md:text-sm">{product.BrandName}</td>
+                        <td className="md:text-sm">{product.Price}</td>
+                        <td className="md:text-sm">{product.ProductCreationDateAndTime}</td>
+                        <td className="md:text-sm text-center"><Link to={`/product/${product._id}`} className="btn btn-link text-xl"><BiDetail title="View Details" /></Link></td>
                       </tr>)
                     }
                   </tbody>
@@ -253,8 +261,42 @@ const Home = () => {
             }
           </div>
       }
-      {/* ------------- products card end -------------- */}
 
+      {!loading && !products.length > 0 &&
+        <p className="mb-5 flex justify-center  md:text-xl">
+          <img className="md:w-3/4 lg:w-2/4" src="https://i.ibb.co/syjyZ2C/search-result-not-found.gif" alt="Sorry, no products found. Try adjusting your search or check back later." />
+        </p>
+      }
+      {/* ------------- products card end -------------- */}
+      {/* ------- pagination start ------- */}
+      {
+        products.length > 0 ?
+          <div className='text-center my-10'>
+            <p className="mb-8 font-semibold">Current page: {currentPage + 1}</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              <button className="btn" onClick={handlePrevPage}>Prev</button>
+              {
+                pages.map(page => <button
+                  // className={currentPage === page ? 'selected' : undefined}
+                  className={`btn ${currentPage === page ? 'bg-accent text-accent-content' : undefined}`}
+                  onClick={() => setCurrentPage(page)}
+                  key={page}
+                >{page + 1}</button>)
+              }
+              <button className="btn" onClick={handleNextPage}>Next</button>
+              <select className="btn bg-base-100 border-2 text-base-content w-20" value={itemsPerPage} onChange={handleItemsPerPage}>
+                <option value="9">9</option>
+                <option value="12">12</option>
+                <option value="18">18</option>
+                <option value="24">24</option>
+                <option value="48">48</option>
+              </select>
+            </div>
+          </div>
+          :
+          <></>
+      }
+      {/* ------- pagination end ------- */}
       {/* ---------- review section start --------- */}
       <div>
 
