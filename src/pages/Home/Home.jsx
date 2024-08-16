@@ -202,8 +202,8 @@ const Home = () => {
       {/* ---------- slider banner End ------------ */}
 
       <div className="my-5">
-        < h3 className="font-semibold md:mt-10 text-xl md:text-2xl lg:text-3xl text-base-content mx-auto text-center">Lorem ipsum dolor sit amet consectetur adipisicing.</h3>
-        <p className="my-5 md:my-8 text-center md:w-2/3 mx-auto">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex dignissimos, deserunt, sequi doloribus nam ratione odio debitis consequuntur reprehenderit tempora enim aut hic praesentium qui quis distinctio fugiat eos ad!</p>
+        < h3 className="font-semibold md:mt-10 text-xl md:text-2xl lg:text-3xl text-base-content mx-auto text-center">Explore the Finest Selection of Electrical Products</h3>
+        <p className="my-5 md:my-8 text-center md:w-2/3 mx-auto">Discover a wide range of top-quality electrical products. Browse through our collection with easy navigation, categorized sorting, and seamless pagination to find exactly what you need. Whether you're looking for innovative lighting solutions, reliable switches, or custom-built electrical distribution boards, we've got you covered.</p>
       </div>
       <div className="flex justify-center md:gap-10 flex-col-reverse md:flex-row">
         {/* ----- Search start ----- */}
