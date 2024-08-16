@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet-async";
 import './home.css';
 import { ToastContainer, toast } from "react-toastify";
 import Swal from "sweetalert2";
+import 'react-toastify/dist/ReactToastify.css';
 // --------------- Swiper Start ------------------------
 // Import Swiper styles
 import 'swiper/css';
