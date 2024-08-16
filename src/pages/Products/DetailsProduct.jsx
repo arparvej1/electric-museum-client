@@ -4,6 +4,7 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
+import useDateTimeFormat from "../../hooks/useDateTimeFormat";
 
 const DetailsProduct = () => {
   const { user } = useAuth();
@@ -55,7 +56,7 @@ const DetailsProduct = () => {
             <p className="text-justify"><span className="font-bold">Category:</span> {Category}</p>
             <p className="text-justify"><span className="font-bold">Price:</span> {Price}</p>
             <p className="text-justify"><span className="font-bold">Ratings:</span> {Ratings}</p>
-            <p className="text-justify"><span className="font-bold">Added:</span> {ProductCreationDateAndTime}</p>
+            <p className="text-justify"><span className="font-bold">Added:</span> {useDateTimeFormat(ProductCreationDateAndTime)}</p>
           </div>
         </div>
         <hr className="my-5" />

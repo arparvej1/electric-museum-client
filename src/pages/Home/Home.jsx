@@ -12,6 +12,7 @@ import { FaList } from "react-icons/fa";
 import { IoGrid } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { BiDetail } from "react-icons/bi";
+import useDateTimeFormat from "../../hooks/useDateTimeFormat";
 // --------------- Swiper End ------------------------
 
 const Home = () => {
@@ -27,27 +28,6 @@ const Home = () => {
       setDisplayLayout('list')
     }
   };
-
-
-  // const callLoadProducts2 = async () => {
-  //   axios.get(`${import.meta.env.VITE_VERCEL_API}/products`)
-  //     .then(function (response) {
-  //       // handle success
-  //       setProducts(response.data);
-  //       setLoading(false);
-  //     })
-  //     .catch(function (error) {
-  //       // handle error
-  //       console.log(error);
-  //     })
-  // };
-
-  // useEffect(() => {
-  //   if (products.length < 1) {
-  //     callLoadProducts2();
-  //   }
-  //   console.log('products', products);
-  // }, [products]);
 
   // ----------------- pagination -----------------------
   const [filterText, setFilterText] = useState('');
@@ -303,7 +283,7 @@ const Home = () => {
                         <td className="md:text-sm">{product.Category}</td>
                         <td className="md:text-sm">{product.BrandName}</td>
                         <td className="md:text-sm">{product.Price}</td>
-                        <td className="md:text-sm">{product.ProductCreationDateAndTime}</td>
+                        <td className="md:text-sm">{useDateTimeFormat(product.ProductCreationDateAndTime)}</td>
                         <td className="md:text-sm text-center"><Link to={`/product/${product._id}`} className="btn btn-link text-xl"><BiDetail title="View Details" /></Link></td>
                       </tr>)
                     }

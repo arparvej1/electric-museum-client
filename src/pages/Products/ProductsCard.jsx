@@ -3,6 +3,8 @@ import ReactStars from "react-rating-stars-component";
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import ProductUpdate from './ProductUpdate/ProductUpdate';
+import useDateTimeFormat from '../../hooks/useDateTimeFormat';
+import { Link } from 'react-router-dom';
 
 const ProductsCard = ({ product, isAdmin }) => {
   const {
@@ -44,12 +46,14 @@ const ProductsCard = ({ product, isAdmin }) => {
   return (
     <div className='border-2 rounded-2xl p-5 flex flex-col justify-between'>
       <div className='col-span-1 space-y-3 my-5'>
-        <h3 className='font-semibold text-2xl'>{ProductName}</h3>
+        <Link to={`/product/${_id}`}>
+          <h3 className='font-semibold text-2xl hover:underline'>{ProductName}</h3>
+        </Link>
         <div className='flex justify-center items-center'>
           <img className='rounded-2xl' src={ProductImage} alt={ProductName} />
         </div>
         <div className='flex flex-col gap-2 justify-center'>
-          <p><span className='font-semibold'></span> {ProductCreationDateAndTime}</p>
+          <p><span className='font-semibold'></span> {useDateTimeFormat(ProductCreationDateAndTime)}</p>
           <h3 className='font-semibold text-2xl'>{Category}</h3>
           <p><span className='font-semibold'>Brand Name:</span> {BrandName}</p>
           <p><span className='font-semibold'>Ratings:</span> {Ratings}</p>
