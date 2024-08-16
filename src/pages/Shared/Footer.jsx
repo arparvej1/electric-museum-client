@@ -25,7 +25,7 @@ const Footer = () => {
               <Link to='/' className="link-hover">Home</Link>
               {!user ?
                 <Link to='/register' className="link-hover">Register</Link>
-                : <Link to='/dashboard/profile' className="link-hover">Profile</Link>}
+                : <Link to='/profile' className="link-hover">Profile</Link>}
             </nav>
           </div>
           <div className="flex flex-col text-center md:text-start gap-2 md:col-span-1">
