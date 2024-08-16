@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../provider/AuthProvider';
 import { RxAvatar } from "react-icons/rx";
 import { FaSignOutAlt } from "react-icons/fa";
@@ -7,6 +7,7 @@ import { Tooltip as ReactTooltip } from "react-tooltip";
 
 const Navbar = () => {
   const { user, logOut, avatarIcon } = useContext(AuthContext);
+  const location = useLocation();
 
   // -------- theme start -----------------
   const [theme, setTheme] = useState(localStorage.getItem('theme') ? localStorage.getItem('theme') : 'light');
@@ -33,8 +34,10 @@ const Navbar = () => {
       .catch(error => console.log(error))
   }
   const navLinks = <>
-    <li><NavLink to='/'>Home</NavLink></li>
-    <li><NavLink to='/all-products'>All Products</NavLink></li>
+    {
+      location.pathname === "/" ? <></> : <li><NavLink to='/'>Home</NavLink></li>
+    }
+    {/* <li><NavLink to='/all-products'>All Products</NavLink></li> */}
   </>
   const pNavLinks = <>
     {

@@ -10,27 +10,32 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 // import required modules
 import axios from "axios";
+import ProductsCard from "../Products/ProductsCard";
 // --------------- Swiper End ------------------------
 
 const Home = () => {
   const [loading, setLoading] = useState(true);
+  const [products, setProducts] = useState([]);
 
-  // const callLoadScholarships = async () => {
-  //   axios.get(`${import.meta.env.VITE_VERCEL_API}/scholarships`)
-  //     .then(function (response) {
-  //       // handle success
-  //       setScholarships(response.data);
-  //       setLoading(false);
-  //     })
-  //     .catch(function (error) {
-  //       // handle error
-  //       console.log(error);
-  //     })
-  // };
+  const callLoadProducts = async () => {
+    axios.get(`${import.meta.env.VITE_VERCEL_API}/products`)
+      .then(function (response) {
+        // handle success
+        setProducts(response.data);
+        setLoading(false);
+      })
+      .catch(function (error) {
+        // handle error
+        console.log(error);
+      })
+  };
 
-  // useEffect(() => {
-  //   callLoadScholarships();
-  // }, []);
+  useEffect(() => {
+    if (products.length < 1) {
+      callLoadProducts();
+    }
+    console.log('products', products);
+  }, [products]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -48,7 +53,7 @@ const Home = () => {
   };
 
   useEffect(() => {
-    loadReview();
+    // loadReview();
   }, []);
   // ---------------- review end ---------------------
 
@@ -102,16 +107,24 @@ const Home = () => {
         < h3 className="font-semibold md:mt-10 text-xl md:text-2xl lg:text-3xl text-base-content mx-auto text-center">Lorem ipsum dolor sit amet consectetur adipisicing.</h3>
         <p className="my-5 md:my-8 text-center md:w-2/3 mx-auto">Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex dignissimos, deserunt, sequi doloribus nam ratione odio debitis consequuntur reprehenderit tempora enim aut hic praesentium qui quis distinctio fugiat eos ad!</p>
       </div>
+
+      <div className="grid gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          {
+            products.map(product => <ProductsCard
+              key={product._id} product={product}
+            ></ProductsCard>)
+          }
+        </div>
       {/* ------------- products card end -------------- */}
       {/* ---------- review section start --------- */}
       <div>
-        
+
       </div>
       {/* ---------- review section end --------- */}
       {/* Subscriber start */}
       <div className="my-5 md:my-10 lg:my-20">
         <p className="max-w-2xl text-center my-5 px-5 md:mt-10 lg:mt-24 mx-auto">
-        Illuminate your product discovery with Electric Museum. Explore now for the latest innovations and expertly curated collections. Don’t miss out on the electrifying experience!
+          Illuminate your product discovery with Electric Museum. Explore now for the latest innovations and expertly curated collections. Don’t miss out on the electrifying experience!
         </p>
         <div className="max-w-96 px-5 mx-auto">
           <form onSubmit={handleSubscribeEmail} className="flex flex-col gap-5">
