@@ -7,7 +7,6 @@ import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Login from "../pages/User/Login/Login";
 import Register from "../pages/User/Register/Register";
 import Profile from "../pages/User/Profile/Profile";
-// import UpdateProfile from "../pages/User/Profile/UpdateProfile";
 import PrivateRoutes from "../PrivateRoutes/PrivateRoutes";
 
 const router = createBrowserRouter([
@@ -32,10 +31,6 @@ const router = createBrowserRouter([
         path: '/profile',
         element: <PrivateRoutes><Profile></Profile></PrivateRoutes>
       },
-      // {
-      //   path: '/update-profile',
-      //   element: <UpdateProfile></UpdateProfile>
-      // },
     ]
   }
 ]);

@@ -18,7 +18,7 @@ const Profile = () => {
   return (
     <div className='md:4/5 mx-auto mb-5'>
       <Helmet>
-        <title> My Profile | ElectricMuseum </title>
+        <title> My Profile | Electric Museum </title>
       </Helmet>
       <div className='flex flex-col gap-3'>
         <h3 className='font-bold text-4xl'>My Profile</h3>
@@ -31,7 +31,7 @@ const Profile = () => {
             <p>{user?.email}</p>
           </div>
           <div className='text-right  navbar-end'>
-            <Link to='/update-profile' className='text-xl font-semibold underline btn btn-ghost text-blue-600'>Edit Profile</Link>
+            {/* <Link to='/update-profile' className='text-xl font-semibold underline btn btn-ghost text-blue-600'>Edit Profile</Link> */}
           </div>
         </div>
         <div className='grid lg:grid-cols-2 gap-3'>

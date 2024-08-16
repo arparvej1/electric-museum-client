@@ -13,7 +13,7 @@ import { AuthContext } from '../../../provider/AuthProvider';
 import axios from 'axios';
 
 const Login = () => {
-  const { user, signInUser, signInWithGoogle, signInWithGithub, registerCheck, setAlreadyLogin, textDot, setTextDot } = useContext(AuthContext);
+  const { user, signInUser, signInWithGoogle, registerCheck, setAlreadyLogin, textDot, setTextDot } = useContext(AuthContext);
   const navigate = useNavigate();
   const [loginFailedMsg, setLoginFailedMsg] = useState('');
   const location = useLocation();
@@ -72,7 +72,7 @@ const Login = () => {
           .then(emailExists => {
             if (!emailExists) {
               // If email does not exist, add the user to the database
-              const userData = { email, name: displayName, photoURL };
+              const userData = { email, name: displayName, photo_url: photoURL };
               addUserToDatabase(userData);
             } else {
               console.log('Email already exists in the database. Skipping user addition.');
@@ -98,41 +98,16 @@ const Login = () => {
   };
 
   const addUserToDatabase = (userData) => {
-    axios.post(`${import.meta.env.VITE_VERCEL_API}/allUsers`, userData)
-      .then(response => {
+    // --------- send server start -----
+    axios.post(`${import.meta.env.VITE_VERCEL_API}/userRegister`, userData)
+      .then(function (response) {
         console.log('User added to the database:', response.data);
       })
-      .catch(error => {
+      .catch(function (error) {
         console.error('Error adding user to the database:', error);
       });
+    // --------- send server end -----
   };
-
-
-  const handleLoginWithGithub = () => {
-    signInWithGithub()
-      .then(result => {
-        const { displayName, email } = result.user;
-        console.log(result.user.displayName);
-        console.log('Login Success!');
-        setAlreadyLogin(true);
-        navigate(location?.state ? location.state : '/');
-        checkEmailExists(email) // Check if the email already exists in the database
-          .then(emailExists => {
-            if (!emailExists) {
-              // If email does not exist, add the user to the database
-              addUserToDatabase({ email, name: displayName });
-            } else {
-              console.log('Email already exists in the database. Skipping user addition.');
-            }
-          })
-          .catch(error => {
-            console.error('Error checking if email exists:', error);
-          });
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
 
   return (
     <>
@@ -188,15 +163,6 @@ const Login = () => {
                 >
                   <FcGoogle className='text-2xl' />
                   Google
-                </button>
-              </div>
-              <div>
-                <button
-                  onClick={handleLoginWithGithub}
-                  className="flex gap-2 btn border border-gray-200 bg-white"
-                >
-                  <FaGithub className="text-2xl" />
-                  Github
                 </button>
               </div>
             </div>
