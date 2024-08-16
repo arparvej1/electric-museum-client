@@ -55,6 +55,9 @@ const Home = () => {
   const [itemsPerPage, setItemsPerPage] = useState(9);
   const [count, setCount] = useState(0);
 
+  const [sortBy, setSortBy] = useState('priceLowToHigh');
+  const [sortOrder, setSortOrder] = useState('asc'); // 'desc' for descending, 'asc' for ascending
+
   const numberOfPages = Math.ceil(count / itemsPerPage);
   const pages = [...Array(numberOfPages).keys()];
 
@@ -72,7 +75,7 @@ const Home = () => {
   };
 
   const callLoadProducts = async () => {
-    await axios.get(`${import.meta.env.VITE_VERCEL_API}/productsLimit?page=${currentPage}&size=${itemsPerPage}&filterText=${filterText}&input=${''}`)
+    await axios.get(`${import.meta.env.VITE_VERCEL_API}/productsLimit?page=${currentPage}&size=${itemsPerPage}&filterText=${filterText}&sortBy=${sortBy}&sortOrder=${sortOrder}`)
       .then(function (response) {
         // handle success
         console.log('response', response.data)
@@ -88,7 +91,7 @@ const Home = () => {
   useEffect(() => {
     callProductsCount();
     callLoadProducts();
-  }, [currentPage, itemsPerPage, filterText]);
+  }, [currentPage, itemsPerPage, filterText, sortBy, sortOrder]);
 
   const handleItemsPerPage = e => {
     const val = parseInt(e.target.value);
@@ -192,6 +195,24 @@ const Home = () => {
     setFilterText(searchText);
   };
 
+  const handleSortChange = (e) => {
+    const value = e.target.value;
+
+    if (value === 'priceLowToHigh') {
+      setSortBy('Price');
+      setSortOrder('asc');
+    } else if (value === 'priceHighToLow') {
+      setSortBy('Price');
+      setSortOrder('desc');
+    } else if (value === 'newest') {
+      setSortBy('ProductCreationDateAndTime');
+      setSortOrder('desc');
+    } else if (value === 'oldest') {
+      setSortBy('ProductCreationDateAndTime');
+      setSortOrder('asc');
+    }
+  };
+
   return (
     <div>
       <Helmet>
@@ -235,6 +256,21 @@ const Home = () => {
         {/* --------- Display Layout End ------- */}
       </div>
 
+      <div className="flex justify-center md:gap-10 flex-col-reverse md:flex-row">
+        {/* ------- Sort By Start --------- */}
+        <div className="border-2 rounded-lg p-2">
+          <label className="font-bold">Sort By: </label>
+          <select onChange={handleSortChange}>
+            <option value="priceLowToHigh">Price: Low to High</option>
+            <option value="priceHighToLow">Price: High to Low</option>
+            <option value="newest">Date Added: Newest first</option>
+            <option value="oldest">Date Added: Oldest first</option>
+          </select>
+        </div>
+        {/* ------- Sort By end --------- */}
+      </div>
+
+      <hr className="my-5" />
       {/* ------------ products card start ------------- */}
       {/* --------------------- display view ------------------------- */}
       {
