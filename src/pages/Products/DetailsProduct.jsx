@@ -41,6 +41,10 @@ const DetailsProduct = () => {
   }, []);
   // ---------------- rating end ---------------------
 
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   return (
     <>
       <Helmet>
