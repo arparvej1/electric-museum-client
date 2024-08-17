@@ -446,7 +446,7 @@ const Home = () => {
       {/* Subscriber start */}
       <div className="my-5 md:my-10 lg:my-20">
         <p className="max-w-2xl text-center my-5 px-5 md:mt-10 lg:mt-24 mx-auto">
-          Illuminate your product discovery with Electric Museum. Explore now for the latest innovations and expertly curated collections. Don’t miss out on the electrifying experience!
+          Stay updated with the latest innovations in electrical products and technology! Subscribe to our newsletter and be the first to know about new arrivals, special offers, and industry insights. Join the Electric Museum community today!
         </p>
         <div className="max-w-96 px-5 mx-auto">
           <form onSubmit={handleSubscribeEmail} className="flex flex-col gap-5">
