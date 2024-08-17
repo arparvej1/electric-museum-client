@@ -5,6 +5,7 @@ import { ToastContainer, toast } from "react-toastify";
 import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import useDateTimeFormat from "../../hooks/useDateTimeFormat";
+import AddReview from "./Reviews/AddReview";
 
 const DetailsProduct = () => {
   const { user } = useAuth();
@@ -64,7 +65,11 @@ const DetailsProduct = () => {
           <p className="text-justify"><span className="font-bold">Description:</span> {Description}</p>
           <hr />
           <div>
+            <AddReview
+              product={product}
+            ></AddReview>
           </div>
+          <hr className="my-2" />
         </div>
       </div>
       {/* ---------- review section --------- */}
