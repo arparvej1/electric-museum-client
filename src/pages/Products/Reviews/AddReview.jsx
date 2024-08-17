@@ -5,6 +5,7 @@ import useAuth from '../../../hooks/useAuth';
 import LoginModel from '../../User/Login/LoginModel';
 import PropTypes from 'prop-types';
 import axios from 'axios';
+import ReviewCard from './ReviewCard';
 
 const AddReview = ({ product }) => {
   const { user } = useAuth();
@@ -174,6 +175,17 @@ const AddReview = ({ product }) => {
         </div>
       </dialog>
       {/* ------- Login Form End ---------- */}
+      <hr className="my-2" />
+      {/* ---------- review section start --------- */}
+      <div>
+        {
+          reviews.length > 0 &&
+          <ReviewCard
+            reviews={reviews.sort(function () { return 0.5 - Math.random() }).slice(0, 6)}
+          ></ReviewCard>
+        }
+      </div>
+      {/* ---------- review section end --------- */}
     </div>
   );
 };

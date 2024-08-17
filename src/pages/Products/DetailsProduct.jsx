@@ -69,18 +69,9 @@ const DetailsProduct = () => {
               product={product}
             ></AddReview>
           </div>
-          <hr className="my-2" />
         </div>
       </div>
-      {/* ---------- review section --------- */}
-      {/* <div>
-        {
-          reviews.length > 0 &&
-          <ProductReviewDisplay
-            reviews={reviews}
-          ></ProductReviewDisplay>
-        }
-      </div> */}
+      
       <ToastContainer />
     </>
   );

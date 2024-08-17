@@ -13,6 +13,7 @@ import { IoGrid } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { BiDetail } from "react-icons/bi";
 import useDateTimeFormat from "../../hooks/useDateTimeFormat";
+import ReviewCard from "../Products/Reviews/ReviewCard";
 // --------------- Swiper End ------------------------
 
 const Home = () => {
@@ -115,22 +116,6 @@ const Home = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
-  // ---------------- review start ---------------------
-  const [reviews, setReviews] = useState([]);
-  const loadReview = async () => {
-    try {
-      const response = await axios.get(`${import.meta.env.VITE_VERCEL_API}/reviews`);
-      // console.log(response.data);
-      setReviews(response.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    // loadReview();
-  }, []);
-  // ---------------- review end ---------------------
 
   const handleSubscribeEmail = (e) => {
     e.preventDefault();
@@ -438,11 +423,6 @@ const Home = () => {
           <></>
       }
       {/* ------- pagination end ------- */}
-      {/* ---------- review section start --------- */}
-      <div>
-
-      </div>
-      {/* ---------- review section end --------- */}
       {/* Subscriber start */}
       <div className="my-5 md:my-10 lg:my-20">
         <p className="max-w-2xl text-center my-5 px-5 md:mt-10 lg:mt-24 mx-auto">
