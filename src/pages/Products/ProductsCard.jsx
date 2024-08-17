@@ -18,46 +18,56 @@ const ProductsCard = ({ product, isAdmin }) => {
     Ratings,
     ProductCreationDateAndTime
   } = product;
-  // ----------- rating start -------------
-  const [rating, setRating] = useState(0);
-  const calculateAverageRating = (reviews) => {
-    if (reviews.length === 0) return 0;
-    const sum = reviews.reduce((acc, curr) => acc + curr.rating, 0);
-    return sum / reviews.length;
-  };
-  const loadReview = async () => {
+  // ---------------- rating start ---------------------
+  const [thisRating, setThisRating] = useState(0);
+
+  const loadRating = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_VERCEL_API}/reviewsFilter?scholarshipId=${_id}`);
-      console.log(response.data);
-      const reviews = response.data;
-      const averageRating = calculateAverageRating(reviews);
-      setRating(averageRating);
+      const response = await axios.get(`${import.meta.env.VITE_VERCEL_API}/productRating/${_id}`);
+      // console.log('thisRating', response.data.averageRating);
+      setThisRating(Number(response.data.averageRating));
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    // loadReview();
+    loadRating();
   }, []);
-  // ----------- rating end -------------
+  // ---------------- rating end ---------------------
 
 
   return (
     <div className='border-2 rounded-2xl p-5 flex flex-col justify-between'>
       <div className='col-span-1 space-y-3 my-5'>
-        <Link to={`/product/${_id}`}>
-          <h3 className='font-semibold text-2xl hover:underline'>{ProductName}</h3>
-        </Link>
+          <h3 className='font-semibold text-2xl'>{ProductName}</h3>
         <div className='flex justify-center items-center'>
-          <img className='rounded-2xl' src={ProductImage} alt={ProductName} />
+          <Link to={`/product/${_id}`}>
+            <img className='rounded-2xl' src={ProductImage} alt={ProductName} />
+          </Link>
         </div>
         <div className='flex flex-col gap-2 justify-center'>
           <p><span className='font-semibold'></span> {useDateTimeFormat(ProductCreationDateAndTime)}</p>
           <h3 className='font-semibold text-2xl'>{Category}</h3>
           <p><span className='font-semibold'>Brand Name:</span> {BrandName}</p>
-          <p><span className='font-semibold'>Ratings:</span> {Ratings}</p>
           <p><span className='font-semibold'>Price:</span> {Price}</p>
+          <label className="flex gap-1 w-full items-center">
+            <span className="font-semibold">Rating: </span>
+            {thisRating > 0 ? (
+              <ReactStars
+                count={5}
+                value={thisRating}
+                size={24}
+                edit={false}
+                emptyIcon={<i className="far fa-star"></i>}
+                halfIcon={<i className="fa fa-star-half-alt"></i>}
+                fullIcon={<i className="fa fa-star"></i>}
+                activeColor="#ffd700"
+              />
+            ) : (
+              <span>No Rating Fund.</span>
+            )}
+          </label>
           <p><span className='font-semibold'>Description:</span> {Description}</p>
 
           <div>
@@ -69,20 +79,6 @@ const ProductsCard = ({ product, isAdmin }) => {
             }
           </div>
 
-          {/* -- TODO: Update rating -- */}
-          {rating ?
-            <p>
-              <label className="flex gap-1 w-full items-center">
-                <span>Rating: </span>
-                <ReactStars
-                  size={24}
-                  activeColor="#ffd700"
-                  value={rating}
-                  edit={false}
-                />
-              </label>
-            </p>
-            : <></>}
         </div>
       </div>
     </div>

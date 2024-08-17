@@ -46,7 +46,6 @@ const AddReview = ({ product, loadRating }) => {
     setReviewRating(newRating);
     setRatingMsg('');
   };
-  const [reviewOneTime, setReviewOneTime] = useState(true);
 
   const handleAddReview = async (e) => {
     e.preventDefault();
@@ -60,9 +59,6 @@ const AddReview = ({ product, loadRating }) => {
     } else {
       setRatingMsg('');
     }
-
-    if (!reviewOneTime) return;
-    setReviewOneTime(false);
 
     const form = e.target;
     const comment = form.comment.value;

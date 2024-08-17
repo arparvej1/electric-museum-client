@@ -23,13 +23,13 @@ const DetailsProduct = () => {
     ProductCreationDateAndTime
   } = product;
 
-  // ---------------- review start ---------------------
+  // ---------------- rating start ---------------------
   const [thisRating, setThisRating] = useState(0);
 
   const loadRating = async () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_VERCEL_API}/productRating/${_id}`);
-      console.log('thisRating', response.data.averageRating);
+      // console.log('thisRating', response.data.averageRating);
       setThisRating(Number(response.data.averageRating));
     } catch (error) {
       console.log(error);
@@ -39,7 +39,7 @@ const DetailsProduct = () => {
   useEffect(() => {
     loadRating();
   }, []);
-  // ---------------- review end ---------------------
+  // ---------------- rating end ---------------------
 
   return (
     <>
