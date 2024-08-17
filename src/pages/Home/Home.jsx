@@ -39,8 +39,8 @@ const Home = () => {
   const pages = [...Array(numberOfPages).keys()];
 
   // ----- extra filter items
-  const [sortBy, setSortBy] = useState('priceLowToHigh');
-  const [sortOrder, setSortOrder] = useState('asc'); // 'desc' for descending, 'asc' for ascending
+  const [sortBy, setSortBy] = useState('');
+  const [sortOrder, setSortOrder] = useState(''); // 'desc' for descending, 'asc' for ascending
   const [brands, setBrands] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedBrand, setSelectedBrand] = useState('');
@@ -368,7 +368,7 @@ const Home = () => {
                       <td className="md:text-sm text-center">Category</td>
                       <td className="md:text-sm text-center">Brand Name</td>
                       <td className="md:text-sm text-center">Price</td>
-                      <td className="md:text-sm text-center">Added</td>
+                      <td className="md:text-sm text-center">Added Date</td>
                       <td className="md:text-sm text-center">Details</td>
                     </tr>
                   </thead>

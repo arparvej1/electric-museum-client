@@ -46,8 +46,8 @@ const DetailsProduct = () => {
       {/* ---------------- scholarship details ------------------- */}
       <div>
         <div className="flex flex-col md:flex-row gap-12 mt-10 justify-center">
-          <div className="bg-base-300 rounded-3xl p-16 flex justify-center">
-            <img className="max-h-48" src={ProductImage} alt={ProductName} />
+          <div className="bg-base-300 rounded-3xl p-8 flex justify-center">
+            <img className="max-h-96" src={ProductImage} alt={ProductName} />
           </div>
           <div className="flex flex-col gap-4">
             <h3 className="font-bold text-4xl">{ProductName}</h3>
@@ -56,7 +56,7 @@ const DetailsProduct = () => {
             <p className="text-justify"><span className="font-bold">Category:</span> {Category}</p>
             <p className="text-justify"><span className="font-bold">Price:</span> {Price}</p>
             <p className="text-justify"><span className="font-bold">Ratings:</span> {Ratings}</p>
-            <p className="text-justify"><span className="font-bold">Added:</span> {useDateTimeFormat(ProductCreationDateAndTime)}</p>
+            <p className="text-justify"><span className="font-bold">Added Date:</span> {useDateTimeFormat(ProductCreationDateAndTime)}</p>
           </div>
         </div>
         <hr className="my-5" />
