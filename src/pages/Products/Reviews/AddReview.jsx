@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import ReviewCard from './ReviewCard';
 
-const AddReview = ({ product }) => {
+const AddReview = ({ product, loadRating }) => {
   const { user } = useAuth();
   const { _id } = product;
   // ---------------- review start ---------------------
@@ -18,7 +18,7 @@ const AddReview = ({ product }) => {
   const loadReview = async () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_VERCEL_API}/reviews/${_id}`);
-      console.log('reviews', response.data);
+      // console.log('reviews', response.data);
       setReviews(response.data);
     } catch (error) {
       console.log(error);
@@ -28,7 +28,7 @@ const AddReview = ({ product }) => {
   const loadMyReview = async () => {
     try {
       const response = await axios.get(`${import.meta.env.VITE_VERCEL_API}/myReviews?email=${user?.email}&productId=${_id}`);
-      console.log('myReviews', response.data);
+      // console.log('myReviews', response.data);
       setMyReviews(response.data);
     } catch (error) {
       console.log(error);
@@ -87,6 +87,7 @@ const AddReview = ({ product }) => {
           toast.success('Thanks for Review!');
           loadReview();
           loadMyReview();
+          loadRating();
           form.reset();
         }
       })
@@ -192,7 +193,8 @@ const AddReview = ({ product }) => {
 
 
 AddReview.propTypes = {
-  product: PropTypes.object.isRequired
+  product: PropTypes.object.isRequired,
+  loadRating: PropTypes.func
 };
 
 export default AddReview;

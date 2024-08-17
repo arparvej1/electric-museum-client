@@ -6,6 +6,7 @@ import useAuth from "../../hooks/useAuth";
 import axios from "axios";
 import useDateTimeFormat from "../../hooks/useDateTimeFormat";
 import AddReview from "./Reviews/AddReview";
+import ReactStars from "react-rating-stars-component";
 
 const DetailsProduct = () => {
   const { user } = useAuth();
@@ -23,19 +24,20 @@ const DetailsProduct = () => {
   } = product;
 
   // ---------------- review start ---------------------
-  const [reviews, setReviews] = useState([]);
-  const loadReview = async () => {
+  const [thisRating, setThisRating] = useState(0);
+
+  const loadRating = async () => {
     try {
-      const response = await axios.get(`/reviewsFilter?scholarshipId=${_id}`);
-      // console.log(response.data);
-      setReviews(response.data);
+      const response = await axios.get(`${import.meta.env.VITE_VERCEL_API}/productRating/${_id}`);
+      console.log('thisRating', response.data.averageRating);
+      setThisRating(Number(response.data.averageRating));
     } catch (error) {
       console.log(error);
     }
   };
 
   useEffect(() => {
-    // loadReview();
+    loadRating();
   }, []);
   // ---------------- review end ---------------------
 
@@ -44,7 +46,7 @@ const DetailsProduct = () => {
       <Helmet>
         <title> {ProductName} | Electric Museum </title>
       </Helmet>
-      {/* ---------------- scholarship details ------------------- */}
+      {/* ---------------- product details ------------------- */}
       <div>
         <div className="flex flex-col md:flex-row gap-12 mt-10 justify-center">
           <div className="bg-base-300 rounded-3xl p-8 flex justify-center">
@@ -56,7 +58,23 @@ const DetailsProduct = () => {
             <p className="text-justify"><span className="font-bold">Brand Name:</span> {BrandName}</p>
             <p className="text-justify"><span className="font-bold">Category:</span> {Category}</p>
             <p className="text-justify"><span className="font-bold">Price:</span> {Price}</p>
-            <p className="text-justify"><span className="font-bold">Ratings:</span> {Ratings}</p>
+            <label className="flex gap-1 w-full items-center">
+              <span className="font-semibold">Rating: </span>
+              {thisRating > 0 ? (
+                <ReactStars
+                  count={5}
+                  value={thisRating}
+                  size={24}
+                  edit={false}
+                  emptyIcon={<i className="far fa-star"></i>}
+                  halfIcon={<i className="fa fa-star-half-alt"></i>}
+                  fullIcon={<i className="fa fa-star"></i>}
+                  activeColor="#ffd700"
+                />
+              ) : (
+                <span>No Rating Fund.</span>
+              )}
+            </label>
             <p className="text-justify"><span className="font-bold">Added Date:</span> {useDateTimeFormat(ProductCreationDateAndTime)}</p>
           </div>
         </div>
@@ -67,11 +85,12 @@ const DetailsProduct = () => {
           <div>
             <AddReview
               product={product}
+              loadRating={loadRating}
             ></AddReview>
           </div>
         </div>
       </div>
-      
+
       <ToastContainer />
     </>
   );
